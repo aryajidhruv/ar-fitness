@@ -276,6 +276,13 @@ input[type="range"].scrubber {
   width: max-content;
 }
 
+.loader-logo-mark {
+  width: 84px;
+  height: 84px;
+  display: grid;
+  place-items: center;
+}
+
 .loader-logo-box {
   width: 84px;
   height: 84px;

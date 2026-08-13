@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
+import { getAdminSession } from "@/lib/adminSession";
 import { revalidatePath } from "next/cache";
-import { authOptions } from "@/lib/authOptions";
 import { connectDB } from "@/lib/mongodb";
 import GalleryItem from "@/models/GalleryItem";
 import { getGallerySlot, sortGalleryItems } from "@/lib/gallerySlots";
@@ -17,7 +16,7 @@ export async function GET(req) {
 }
 
 export async function POST(req) {
-  const session = await getServerSession(authOptions);
+  const session = await getAdminSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   await connectDB();

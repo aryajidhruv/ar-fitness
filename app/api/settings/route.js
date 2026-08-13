@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
+import { getAdminSession } from "@/lib/adminSession";
 import { revalidatePath } from "next/cache";
-import { authOptions } from "@/lib/authOptions";
 import { connectDB } from "@/lib/mongodb";
 import { getSettings } from "@/lib/data";
 import { buildSettingsUpdate } from "@/lib/settingsUpdate";
@@ -15,7 +14,7 @@ export async function GET() {
 }
 
 export async function PUT(req) {
-  const session = await getServerSession(authOptions);
+  const session = await getAdminSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   await connectDB();

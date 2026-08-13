@@ -1,13 +1,12 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
+import { getAdminSession } from "@/lib/adminSession";
 import { revalidatePath } from "next/cache";
-import { authOptions } from "@/lib/authOptions";
 import { connectDB } from "@/lib/mongodb";
 import InstagramPost from "@/models/InstagramPost";
 import { deleteUpload, deleteUnusedUploads } from "@/lib/uploads";
 
 export async function PUT(req, { params }) {
-  const session = await getServerSession(authOptions);
+  const session = await getAdminSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   await connectDB();
@@ -24,7 +23,7 @@ export async function PUT(req, { params }) {
 }
 
 export async function DELETE(_req, { params }) {
-  const session = await getServerSession(authOptions);
+  const session = await getAdminSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   await connectDB();

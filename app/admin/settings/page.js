@@ -21,6 +21,7 @@ export default function AdminSettingsPage() {
     setSaved(false);
     await fetch("/api/settings", {
       method: "PUT",
+      credentials: "same-origin",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form)
     });
@@ -78,6 +79,7 @@ export default function AdminSettingsPage() {
             try {
               const res = await fetch("/api/settings", {
                 method: "PUT",
+                credentials: "same-origin",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(next)
               });
@@ -118,6 +120,7 @@ export default function AdminSettingsPage() {
             try {
               const res = await fetch("/api/settings", {
                 method: "PUT",
+                credentials: "same-origin",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(next)
               });

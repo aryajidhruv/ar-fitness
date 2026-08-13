@@ -1,8 +1,16 @@
-export { default as proxy } from "next-auth/middleware";
+import { withAuth } from "next-auth/middleware";
+
+const useSecureCookies =
+  process.env.NEXTAUTH_URL?.startsWith("https://") ?? process.env.NODE_ENV === "production";
+
+export default withAuth({
+  secret: process.env.NEXTAUTH_SECRET,
+  useSecureCookies,
+  pages: {
+    signIn: "/admin/login"
+  }
+});
 
 export const config = {
-  // Protect every /admin route except /admin/login itself.
-  // NextAuth's default middleware redirects unauthenticated users to
-  // the pages.signIn path configured in lib/authOptions.js.
   matcher: ["/admin/((?!login).*)"]
 };

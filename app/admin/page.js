@@ -1,5 +1,4 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/authOptions";
+import { getAdminSession } from "@/lib/adminSession";
 import { connectDB } from "@/lib/mongodb";
 import Transformation from "@/models/Transformation";
 import GalleryItem from "@/models/GalleryItem";
@@ -9,7 +8,7 @@ import AdminShell from "@/components/admin/AdminShell";
 import Link from "next/link";
 
 export default async function AdminOverviewPage() {
-  const session = await getServerSession(authOptions);
+  const session = await getAdminSession();
   await connectDB();
 
   const [transformCount, galleryCount, instagramCount, testimonialCount] = await Promise.all([
@@ -29,7 +28,7 @@ export default async function AdminOverviewPage() {
   return (
     <AdminShell>
       <h1 className="font-display font-extrabold uppercase text-3xl">
-        Welcome{session?.user?.name ? `, ${session.user.name}` : ""}
+        Welcome{session?.name ? `, ${session.name}` : ""}
       </h1>
       <p className="text-bone-dim mt-2">Manage what shows up on the AR Fitness website.</p>
 

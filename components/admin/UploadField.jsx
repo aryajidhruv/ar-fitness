@@ -62,7 +62,11 @@ export default function UploadField({
       formData.append("file", file);
       formData.append("folder", folder);
 
-      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        credentials: "same-origin",
+        body: formData
+      });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Upload failed");
       onChange({ url: data.url, publicId: data.publicId });

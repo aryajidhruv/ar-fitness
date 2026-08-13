@@ -13,10 +13,10 @@ function LogoMark({ logoUrl, gymName, boxClass, textClass, pulse = false }) {
   if (logoUrl) {
     return (
       <span
-        className={`${boxClass} grid place-items-center border border-brass bg-iron overflow-hidden shrink-0 ${pulse ? "loader-logo-pulse" : ""}`}
+        className={`${boxClass} grid place-items-center overflow-hidden shrink-0 ${pulse ? "loader-logo-pulse" : ""}`}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={logoUrl} alt={gymName} className="w-full h-full object-contain p-1" />
+        <img src={logoUrl} alt={gymName} className="w-full h-full object-contain" />
       </span>
     );
   }
@@ -42,7 +42,7 @@ export default function SiteLogo({
         <LogoMark
           logoUrl={logoUrl}
           gymName={gymName}
-          boxClass="loader-logo-box mx-auto"
+          boxClass={logoUrl ? "loader-logo-mark mx-auto" : "loader-logo-box mx-auto"}
           textClass="text-[38px]"
           pulse
         />

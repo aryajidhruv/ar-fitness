@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/authOptions";
+import { getAdminSession } from "@/lib/adminSession";
 import { saveUpload, sanitizeFolder } from "@/lib/uploads";
 
-const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
+const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/gif", "image/svg+xml"]);
 const ALLOWED_VIDEO_TYPES = new Set(["video/mp4", "video/webm", "video/quicktime"]);
 const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
 const MAX_VIDEO_BYTES = 100 * 1024 * 1024;
@@ -12,7 +11,7 @@ const MAX_VIDEO_BYTES = 100 * 1024 * 1024;
 // and an optional "folder" field, saves it under public/uploads/, and returns
 // the URL + publicId the frontend needs to save on a Transformation / GalleryItem.
 export async function POST(req) {
-  const session = await getServerSession(authOptions);
+  const session = await getAdminSession();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
