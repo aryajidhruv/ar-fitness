@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import SiteLogo from "./SiteLogo";
 
 const LINKS = [
   { href: "#coach", label: "Coach" },
@@ -14,7 +15,7 @@ const LINKS = [
   { href: "#visit", label: "Visit" }
 ];
 
-export default function Nav({ gymName, whatsappNumber }) {
+export default function Nav({ gymName, whatsappNumber, logoUrl }) {
   const [stuck, setStuck] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -35,13 +36,8 @@ export default function Nav({ gymName, whatsappNumber }) {
       }`}
     >
       <div className="w-[92%] max-w-[1200px] mx-auto flex items-center justify-between gap-5">
-        <Link href="#top" className="flex items-center gap-2.5">
-          <span className="w-[34px] h-[34px] grid place-items-center border border-brass font-display font-black text-brass text-[17px]">
-            AR
-          </span>
-          <span className="font-display font-extrabold text-[22px] uppercase tracking-wide leading-none">
-            AR <span className="text-brass">Fitness</span>
-          </span>
+        <Link href="#top" className="flex items-center">
+          <SiteLogo logoUrl={logoUrl} gymName={gymName} variant="inline" />
         </Link>
 
         <div className="hidden md:flex gap-8 font-cond uppercase tracking-[.13em] text-[14.5px] font-medium">

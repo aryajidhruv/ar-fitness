@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import SiteLogo from "./SiteLogo";
 import {
   BicepsFlexed,
   Dumbbell,
@@ -28,7 +29,7 @@ function orbitTransform(index) {
   return `rotate(${angle}deg) translateY(-${ORBIT_RADIUS}px) rotate(${-angle}deg)`;
 }
 
-export default function PageLoader({ gymName = "AR Fitness" }) {
+export default function PageLoader({ gymName = "AR Fitness", logoUrl = "" }) {
   const [show, setShow] = useState(true);
 
   useEffect(() => {
@@ -86,15 +87,7 @@ export default function PageLoader({ gymName = "AR Fitness" }) {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.45, ease: [0.19, 1, 0.22, 1] }}
           >
-            <div className="loader-logo-box font-display font-black text-brass text-[38px] loader-logo-pulse">
-              AR
-            </div>
-            <p className="font-display font-extrabold uppercase tracking-wide text-[30px] leading-none mt-5">
-              AR <span className="text-brass">Fitness</span>
-            </p>
-            <p className="font-cond uppercase tracking-[.24em] text-[11px] text-bone-dim mt-2.5">
-              {gymName}
-            </p>
+            <SiteLogo logoUrl={logoUrl} gymName={gymName} variant="loader" />
           </motion.div>
         </div>
       </div>

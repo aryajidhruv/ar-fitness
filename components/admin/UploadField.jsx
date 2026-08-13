@@ -39,7 +39,8 @@ export default function UploadField({
   folder = "ar-fitness",
   expectedRatio,
   ratioLabel,
-  previewClassName = "w-28 aspect-[3/4]"
+  previewClassName = "w-28 aspect-[3/4]",
+  previewObjectFit = "cover"
 }) {
   const inputRef = useRef(null);
   const [busy, setBusy] = useState(false);
@@ -85,7 +86,7 @@ export default function UploadField({
             <video src={value.url} className="w-full h-full object-cover" muted />
           ) : (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={value.url} alt="" className="w-full h-full object-cover" />
+            <img src={value.url} alt="" className={`w-full h-full ${previewObjectFit === "contain" ? "object-contain p-2" : "object-cover"}`} />
           )}
         </div>
       )}

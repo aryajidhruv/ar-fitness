@@ -58,6 +58,43 @@ export default function AdminSettingsPage() {
 
       <form onSubmit={handleSubmit} className="border border-white/10 p-6 mt-8 space-y-5 max-w-xl">
         {field("gymName", "Gym name")}
+        <UploadField
+          label="Site logo"
+          accept="image/*"
+          folder="ar-fitness/logo"
+          previewClassName="w-28 h-28"
+          previewObjectFit="contain"
+          value={form.logoUrl ? { url: form.logoUrl, publicId: form.logoPublicId } : null}
+          onChange={async (photo) => {
+            const next = {
+              ...form,
+              logoUrl: photo?.url || "",
+              logoPublicId: photo?.publicId || ""
+            };
+            setForm(next);
+
+            setSaving(true);
+            setSaved(false);
+            try {
+              const res = await fetch("/api/settings", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(next)
+              });
+              if (!res.ok) throw new Error("Failed to save logo");
+              setForm(await res.json());
+              setSaved(true);
+              setTimeout(() => setSaved(false), 2500);
+            } catch (err) {
+              console.error(err);
+            } finally {
+              setSaving(false);
+            }
+          }}
+        />
+        <p className="text-xs text-bone-dim -mt-3">
+          Shown in the nav, footer, loading screen, and admin. PNG or SVG with a transparent background works best.
+        </p>
         {field("ownerName", "Owner name")}
         <UploadField
           label="Owner photo"

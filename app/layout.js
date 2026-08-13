@@ -87,7 +87,7 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en" className={`${display.variable} ${body.variable} ${cond.variable}`}>
       <body className="bg-iron text-bone font-body antialiased">
-        <PageLoader gymName={settings.gymName} />
+        <PageLoader gymName={settings.gymName} logoUrl={settings.logoUrl} />
         <script
           type="application/ld+json"
           // eslint-disable-next-line react/no-danger

@@ -44,6 +44,10 @@ export async function PUT(req) {
     );
   }
 
+  if ("logoPublicId" in update) {
+    await deleteUnusedUploads([existing?.logoPublicId], [update.logoPublicId]);
+  }
+
   revalidatePath("/");
   revalidatePath("/visit");
   return NextResponse.json(doc);

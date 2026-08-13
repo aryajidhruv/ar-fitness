@@ -32,7 +32,7 @@ export default async function HomePage() {
 
   return (
     <div className="grain">
-      <Nav gymName={settings.gymName} whatsappNumber={settings.whatsappNumber} />
+      <Nav gymName={settings.gymName} whatsappNumber={settings.whatsappNumber} logoUrl={settings.logoUrl} />
       <Hero featured={featured} whatsappNumber={settings.whatsappNumber} gymName={settings.gymName} />
       <Marquee />
       <Coach ownerName={settings.ownerName} ownerPhotoUrl={settings.ownerPhotoUrl} />
@@ -52,7 +52,7 @@ export default async function HomePage() {
       <Plans whatsappNumber={settings.whatsappNumber} />
       <Testimonials items={testimonials} />
       <Visit settings={settings} />
-      <Footer gymName={settings.gymName} ownerName={settings.ownerName} />
+      <Footer gymName={settings.gymName} ownerName={settings.ownerName} logoUrl={settings.logoUrl} />
       <WhatsAppFab whatsappNumber={settings.whatsappNumber} gymName={settings.gymName} />
     </div>
   );
