@@ -10,8 +10,8 @@ const SettingsSchema = new mongoose.Schema(
     ownerName: { type: String, default: "Ajit Singh" },
     ownerPhotoUrl: { type: String, default: "" },
     ownerPhotoPublicId: { type: String, default: "" },
-    whatsappNumber: { type: String, default: "" }, // digits only, e.g. 91XXXXXXXXXX
-    phone: { type: String, default: "" },
+    whatsappNumber: { type: String, default: "918800707026" }, // digits only, e.g. 91XXXXXXXXXX
+    phone: { type: String, default: "8800707026" },
     address: { type: String, default: "" },
     city: { type: String, default: "Delhi" },
     mapEmbedUrl: { type: String, default: "" },

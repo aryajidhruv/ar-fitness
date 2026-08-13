@@ -4,6 +4,7 @@ import Hero from "@/components/Hero";
 import Marquee from "@/components/Marquee";
 import Coach from "@/components/Coach";
 import Programs from "@/components/Programs";
+import OnlineTraining from "@/components/OnlineTraining";
 import Transformations from "@/components/Transformations";
 import Gallery from "@/components/Gallery";
 import InstagramGallery from "@/components/InstagramGallery";
@@ -36,6 +37,11 @@ export default async function HomePage() {
       <Marquee />
       <Coach ownerName={settings.ownerName} ownerPhotoUrl={settings.ownerPhotoUrl} />
       <Programs />
+      <OnlineTraining
+        whatsappNumber={settings.whatsappNumber}
+        gymName={settings.gymName}
+        ownerName={settings.ownerName}
+      />
       <Transformations items={transformations} />
       <Gallery items={gallery} />
       <InstagramGallery
