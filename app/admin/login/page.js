@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { loginAdmin } from "./actions";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -16,18 +16,15 @@ export default function AdminLoginPage() {
     setError("");
     setLoading(true);
 
-    const res = await signIn("credentials", {
-      email,
-      password,
-      redirect: false
-    });
+    const result = await loginAdmin(email, password);
 
     setLoading(false);
 
-    if (res?.error) {
-      setError("Wrong email or password.");
+    if (!result.ok) {
+      setError(result.error || "Wrong email or password.");
       return;
     }
+
     router.push("/admin");
     router.refresh();
   }
