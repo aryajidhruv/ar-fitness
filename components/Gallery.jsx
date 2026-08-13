@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import UploadImage from "./UploadImage";
 import Reveal from "./Reveal";
 import { GALLERY_SLOTS } from "@/lib/gallerySlots";
 
@@ -74,7 +74,7 @@ export default function Gallery({ items }) {
                     onClick={() => setActive(item)}
                     className="absolute inset-0 w-full h-full cursor-pointer border border-white/10"
                   >
-                    <Image src={item.url} alt={item.alt} fill sizes="25vw" className="object-cover" />
+                    <UploadImage src={item.url} alt={item.alt} fill sizes="25vw" className="object-cover" />
                     <span className="absolute inset-0 bg-brass/0 hover:bg-brass/15 transition-colors" />
                   </button>
                 ) : (
@@ -98,7 +98,7 @@ export default function Gallery({ items }) {
             Close ✕
           </button>
           <div className="relative w-[min(760px,90vw)] aspect-[4/3] border border-white/10" onClick={(e) => e.stopPropagation()}>
-            <Image src={active.url} alt={active.alt} fill sizes="80vw" className="object-cover" />
+            <UploadImage src={active.url} alt={active.alt} fill sizes="80vw" className="object-cover" />
           </div>
         </div>
       )}

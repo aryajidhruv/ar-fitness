@@ -1,4 +1,4 @@
-import Image from "next/image";
+import UploadImage, { isLocalUpload } from "./UploadImage";
 import Reveal from "./Reveal";
 
 export default function Coach({ ownerName, ownerPhotoUrl }) {
@@ -11,12 +11,11 @@ export default function Coach({ ownerName, ownerPhotoUrl }) {
         <Reveal>
           <div className="relative aspect-[3/4] border border-white/10 overflow-hidden">
             {ownerPhotoUrl ? (
-              ownerPhotoUrl.startsWith("/uploads/") ? (
-                <Image
+              isLocalUpload(ownerPhotoUrl) ? (
+                <UploadImage
                   src={ownerPhotoUrl}
                   alt={ownerName || "Coach"}
                   fill
-                  sizes="(max-width: 768px) 92vw, 420px"
                   className="object-cover"
                 />
               ) : (

@@ -1,7 +1,36 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import UploadImage from "./UploadImage";
+
+function ScrubberImage({ src, alt, priority, onError }) {
+  const [failed, setFailed] = useState(false);
+
+  if (!src || failed) {
+    return (
+      <div className="absolute inset-0 bg-gradient-to-br from-[#2b2118] to-[#171310] grid place-items-center px-6 text-center">
+        <span className="font-cond uppercase tracking-[.18em] text-[11px] text-bone-dim">
+          Photo unavailable
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <UploadImage
+      src={src}
+      alt={alt}
+      fill
+      priority={priority}
+      sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
+      className="object-cover"
+      onError={() => {
+        setFailed(true);
+        onError?.();
+      }}
+    />
+  );
+}
 
 export default function Scrubber({ beforeUrl, afterUrl, days, name, className = "", priority = false }) {
   const [value, setValue] = useState(50);
@@ -10,28 +39,14 @@ export default function Scrubber({ beforeUrl, afterUrl, days, name, className = 
   return (
     <div className={`relative overflow-hidden border border-white/10 bg-iron-2 select-none ${className}`}>
       <div className="absolute inset-0">
-        <Image
-          src={beforeUrl}
-          alt={`${name} — before`}
-          fill
-          priority={priority}
-          sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
-          className="object-cover"
-        />
+        <ScrubberImage src={beforeUrl} alt={`${name} — before`} priority={priority} />
       </div>
       <span className="absolute top-4 left-4 z-10 bg-iron/70 backdrop-blur px-3 py-1 font-cond uppercase tracking-[.2em] text-xs text-bone-dim">
         Day 0
       </span>
 
       <div className="absolute inset-0" style={{ clipPath: `inset(0 0 0 ${value}%)` }}>
-        <Image
-          src={afterUrl}
-          alt={`${name} — after`}
-          fill
-          priority={priority}
-          sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
-          className="object-cover"
-        />
+        <ScrubberImage src={afterUrl} alt={`${name} — after`} priority={priority} />
         <span className="absolute top-4 right-4 z-10 bg-iron/70 backdrop-blur px-3 py-1 font-cond uppercase tracking-[.2em] text-xs text-brass">
           Day {days}
         </span>
