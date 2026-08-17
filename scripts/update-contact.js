@@ -29,14 +29,18 @@ async function main() {
     "singleton",
     {
       whatsappNumber: "918800707026",
-      phone: "8800707026"
+      phone: "8800707026",
+      hoursWeekday: "Morning 6 AM – 12 PM · Evening 4 PM – 10 PM",
+      hoursSunday: "Closed"
     },
     { upsert: true, new: true, setDefaultsOnInsert: true }
   );
 
-  console.log("Updated contact info:", {
+  console.log("Updated settings:", {
     whatsappNumber: doc.whatsappNumber,
-    phone: doc.phone
+    phone: doc.phone,
+    hoursWeekday: doc.hoursWeekday,
+    hoursSunday: doc.hoursSunday
   });
 
   await mongoose.disconnect();

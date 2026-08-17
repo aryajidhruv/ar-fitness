@@ -21,8 +21,9 @@ export default function Visit({ settings }) {
 
           <div className="border-t border-white/10 mt-8">
             {[
-              ["Monday — Saturday", settings.hoursWeekday],
-              ["Sunday", settings.hoursSunday],
+              ["Monday — Saturday (Morning)", "6:00 AM – 12:00 PM"],
+              ["Monday — Saturday (Evening)", "4:00 PM – 10:00 PM"],
+              ["Sunday", settings.hoursSunday || "Closed"],
               ["Address", settings.address || "Add your address from the admin dashboard"],
               ["Phone", settings.phone || "Add a phone number from the admin dashboard"]
             ].map(([label, val]) => (

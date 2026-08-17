@@ -153,8 +153,12 @@ export default function AdminSettingsPage() {
           "Instagram profile URL",
           "Optional full profile link. Leave blank to build it from the handle."
         )}
-        {field("hoursWeekday", "Monday–Saturday hours")}
-        {field("hoursSunday", "Sunday hours")}
+        {field(
+          "hoursWeekday",
+          "Monday–Saturday hours",
+          "e.g. Morning 6 AM – 12 PM · Evening 4 PM – 10 PM"
+        )}
+        {field("hoursSunday", "Sunday hours", "e.g. Closed")}
         {field(
           "mapEmbedUrl",
           "Google Maps embed",

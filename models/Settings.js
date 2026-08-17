@@ -19,8 +19,8 @@ const SettingsSchema = new mongoose.Schema(
     mapEmbedUrl: { type: String, default: "" },
     latitude: { type: Number, default: null },
     longitude: { type: Number, default: null },
-    hoursWeekday: { type: String, default: "5:30 AM – 10:30 PM" },
-    hoursSunday: { type: String, default: "7:00 AM – 12:00 PM" },
+    hoursWeekday: { type: String, default: "Morning 6 AM – 12 PM · Evening 4 PM – 10 PM" },
+    hoursSunday: { type: String, default: "Closed" },
     metaDescription: { type: String, default: "" },
     instagramHandle: { type: String, default: "" },
     instagramUrl: { type: String, default: "" }
