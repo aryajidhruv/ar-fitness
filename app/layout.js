@@ -5,6 +5,25 @@ import PageLoader from "@/components/PageLoader";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
+function buildSiteIcons(logoUrl) {
+  if (!logoUrl) return undefined;
+
+  const url = logoUrl.startsWith("http") ? logoUrl : logoUrl;
+  const type = url.endsWith(".png")
+    ? "image/png"
+    : url.endsWith(".webp")
+      ? "image/webp"
+      : url.endsWith(".svg")
+        ? "image/svg+xml"
+        : "image/jpeg";
+
+  return {
+    icon: [{ url, type }],
+    shortcut: url,
+    apple: url
+  };
+}
+
 const display = Big_Shoulders({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800", "900"],
@@ -57,7 +76,8 @@ export async function generateMetadata() {
       description,
       images: ["/og-image.jpg"]
     },
-    robots: { index: true, follow: true }
+    robots: { index: true, follow: true },
+    icons: buildSiteIcons(settings.logoUrl)
   };
 }
 

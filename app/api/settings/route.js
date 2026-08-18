@@ -49,5 +49,6 @@ export async function PUT(req) {
 
   revalidatePath("/");
   revalidatePath("/visit");
+  revalidatePath("/", "layout");
   return NextResponse.json(doc);
 }

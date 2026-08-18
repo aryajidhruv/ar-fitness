@@ -4,17 +4,19 @@ import { revalidatePath } from "next/cache";
 import { connectDB } from "@/lib/mongodb";
 import InstagramPost from "@/models/InstagramPost";
 import { deleteUpload, deleteUnusedUploads } from "@/lib/uploads";
+import { getRouteId } from "@/lib/routeParams";
 
 export async function PUT(req, { params }) {
   const session = await getAdminSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   await connectDB();
+  const id = await getRouteId(params);
   const body = await req.json();
-  const existing = await InstagramPost.findById(params.id).lean();
+  const existing = await InstagramPost.findById(id).lean();
   if (!existing) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  const doc = await InstagramPost.findByIdAndUpdate(params.id, body, { new: true });
+  const doc = await InstagramPost.findByIdAndUpdate(id, body, { new: true });
 
   await deleteUnusedUploads([existing.imagePublicId], [body.imagePublicId]);
 
@@ -27,7 +29,8 @@ export async function DELETE(_req, { params }) {
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   await connectDB();
-  const doc = await InstagramPost.findByIdAndDelete(params.id);
+  const id = await getRouteId(params);
+  const doc = await InstagramPost.findByIdAndDelete(id);
   if (!doc) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   try {

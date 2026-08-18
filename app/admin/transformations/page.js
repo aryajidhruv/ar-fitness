@@ -106,7 +106,13 @@ export default function AdminTransformationsPage() {
 
   async function handleDelete(id) {
     if (!confirm("Delete this transformation? This removes the photos/video from storage too.")) return;
-    await fetch(`/api/transformations/${id}`, { method: "DELETE" });
+    const res = await fetch(`/api/transformations/${id}`, { method: "DELETE" });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      setError(data.error || "Delete failed. Try refreshing the page and again.");
+      return;
+    }
+    setError("");
     load();
   }
 

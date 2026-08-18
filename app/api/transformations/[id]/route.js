@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { connectDB } from "@/lib/mongodb";
 import Transformation from "@/models/Transformation";
 import { deleteUpload, deleteUnusedUploads } from "@/lib/uploads";
+import { getRouteId } from "@/lib/routeParams";
 
 function getTransformationKeepIds(body) {
   if (body.isVideo) {
@@ -18,11 +19,12 @@ export async function PUT(req, { params }) {
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   await connectDB();
+  const id = await getRouteId(params);
   const body = await req.json();
-  const existing = await Transformation.findById(params.id).lean();
+  const existing = await Transformation.findById(id).lean();
   if (!existing) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  const doc = await Transformation.findByIdAndUpdate(params.id, body, { new: true });
+  const doc = await Transformation.findByIdAndUpdate(id, body, { new: true });
 
   await deleteUnusedUploads(
     [existing.beforePublicId, existing.afterPublicId, existing.videoPublicId],
@@ -39,7 +41,8 @@ export async function DELETE(_req, { params }) {
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   await connectDB();
-  const doc = await Transformation.findByIdAndDelete(params.id);
+  const id = await getRouteId(params);
+  const doc = await Transformation.findByIdAndDelete(id);
   if (!doc) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   // Clean up the Cloudinary assets so deleting from the dashboard doesn't
