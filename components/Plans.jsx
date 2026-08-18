@@ -1,3 +1,6 @@
+"use client";
+
+import { motion } from "framer-motion";
 import Reveal from "./Reveal";
 
 const PLANS = [
@@ -48,78 +51,128 @@ export default function Plans({ whatsappNumber }) {
   }
 
   return (
-    <section id="plans" className="pb-24 md:pb-32">
-      <div className="w-[92%] max-w-[1200px] mx-auto">
+    <section id="plans" className="py-24 md:py-32 bg-black text-white selection:bg-white selection:text-black overflow-hidden">
+      <div className="w-[92%] max-w-[1300px] mx-auto">
         <Reveal>
-          <p className="font-cond uppercase tracking-[.22em] text-[13px] font-semibold text-brass flex items-center gap-3">
-            <span className="w-7 h-px bg-brass" /> Membership
-          </p>
-          <h2 className="font-display font-extrabold uppercase leading-[.92] text-[38px] sm:text-[56px] mt-4">
-            No contracts.<br />No <em className="not-italic text-brass">joining fee</em>.
+          <motion.p 
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="font-cond uppercase tracking-[.25em] text-xs font-bold text-neutral-400 flex items-center gap-3"
+          >
+            <span className="w-8 h-px bg-white/40" /> Membership
+          </motion.p>
+          <h2 className="font-display font-black uppercase leading-[0.88] text-[40px] sm:text-[60px] lg:text-[72px] tracking-tight text-white mt-3">
+            No contracts.<br />No <em className="not-italic text-neutral-400 font-normal">joining fee</em>.
           </h2>
-          <p className="mt-4 text-bone-dim font-light">First session is free — come train, look around, then decide.</p>
+          <p className="mt-4 text-neutral-300 font-normal text-sm sm:text-[16px] leading-relaxed">
+            First session is free — come train, look around, then decide.
+          </p>
         </Reveal>
 
         <Reveal delay={0.1}>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-12">
-            {PLANS.map((p) => (
-              <div
+            {PLANS.map((p, index) => (
+              <motion.div
                 key={p.name}
-                className={`relative border p-8 hover:-translate-y-1.5 transition-transform duration-500 ${
-                  p.best ? "border-brass bg-iron-2" : "border-white/10 hover:border-brass/45"
+                initial={{ opacity: 0, y: 50, rotateX: 12 }}
+                whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+                viewport={{ once: true }}
+                transition={{ 
+                  duration: 0.7, 
+                  delay: (index % 3) * 0.08, 
+                  ease: [0.16, 1, 0.3, 1] 
+                }}
+                whileHover={{ 
+                  y: -8, 
+                  scale: 1.02, 
+                  transition: { duration: 0.2 } 
+                }}
+                className={`relative border p-8 bg-black overflow-hidden group ${
+                  p.best ? "border-white/40 bg-[#0c0c0c]" : "border-white/10 hover:border-white/40"
                 }`}
               >
+                {/* Expanding Top Border Bar */}
+                <div className="absolute top-0 left-0 h-1 w-0 bg-white transition-all duration-500 group-hover:w-full" />
+
                 {p.best && (
-                  <span className="absolute -top-px -right-px bg-brass text-iron font-cond uppercase tracking-[.16em] text-[11px] font-semibold px-3 py-1.5">
+                  <motion.span 
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.3, duration: 0.4 }}
+                    className="absolute -top-px -right-px bg-white text-black font-cond uppercase tracking-[.18em] text-xs font-bold px-3.5 py-1.5"
+                  >
                     Most joined
-                  </span>
+                  </motion.span>
                 )}
-                <h3 className="font-cond uppercase tracking-[.2em] text-sm text-bone-dim font-semibold">{p.name}</h3>
+
+                <h3 className="font-cond uppercase tracking-[.2em] text-xs font-bold text-neutral-400">{p.name}</h3>
+                
                 {p.contactOnly ? (
                   <>
-                    <p className="font-display font-black text-[38px] leading-none mt-3.5 text-brass">1-on-1</p>
-                    <p className="font-cond uppercase tracking-[.14em] text-xs text-bone-dim mt-1">
+                    <p className="font-display font-black text-[38px] leading-none mt-3.5 tracking-tight text-white">1-on-1</p>
+                    <p className="font-cond uppercase tracking-[.15em] text-xs font-bold text-neutral-400 mt-1">
                       Pricing on enquiry
                     </p>
                   </>
                 ) : (
                   <>
-                    <div className="font-display font-black text-[46px] leading-none mt-3.5">
-                      <sup className="text-[.44em] align-super font-bold text-brass">₹</sup>
+                    <div className="font-display font-black text-[46px] leading-none mt-3.5 tracking-tight text-white">
+                      <sup className="text-[.44em] align-super font-bold text-neutral-400">₹</sup>
                       {p.price}
                     </div>
-                    <p className="font-cond uppercase tracking-[.14em] text-xs text-bone-dim mt-1">{p.per}</p>
+                    <p className="font-cond uppercase tracking-[.15em] text-xs font-bold text-neutral-400 mt-1">{p.per}</p>
                     {p.note && (
-                      <p className="font-cond uppercase tracking-[.12em] text-[11px] text-brass mt-2">{p.note}</p>
+                      <p className="font-cond uppercase tracking-[.15em] text-[11px] font-bold text-neutral-400 mt-2">{p.note}</p>
                     )}
                   </>
                 )}
-                <ul className="my-6 space-y-2.5">
-                  {p.features.map((f) => (
-                    <li key={f} className="flex gap-2.5 items-start text-[15px] font-light text-bone-dim">
-                      <span className="w-[5px] h-[5px] bg-brass rotate-45 flex-none mt-2" />
+
+                <ul className="my-6 space-y-3">
+                  {p.features.map((f, idx) => (
+                    <motion.li 
+                      key={f} 
+                      initial={{ opacity: 0, x: -10 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: idx * 0.05 + 0.2, duration: 0.4 }}
+                      className="flex gap-3 items-start text-sm sm:text-base font-normal text-neutral-300"
+                    >
+                      <span className="w-[5px] h-[5px] bg-white rotate-45 flex-none mt-2" />
                       {f}
-                    </li>
+                    </motion.li>
                   ))}
                 </ul>
-                <a
+
+                <motion.a
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   href={planHref(p)}
                   target="_blank"
-                  rel="noopener"
-                  className={`w-full flex justify-center py-3 font-cond uppercase tracking-[.14em] font-semibold text-[14.5px] border transition-all ${
+                  rel="noopener noreferrer"
+                  className={`w-full flex justify-center py-4 font-cond uppercase tracking-[.15em] font-bold text-xs sm:text-sm border transition-all ${
                     p.contactOnly || p.best
-                      ? "bg-brass border-brass text-iron hover:bg-brass-lite"
-                      : "border-white/15 hover:border-brass hover:text-brass"
+                      ? "bg-white border-white text-black hover:bg-neutral-200 shadow-2xl"
+                      : "border-white/20 bg-black text-neutral-300 hover:border-white hover:text-white"
                   }`}
                 >
                   {p.contactOnly ? "Contact us" : "Enquire"}
-                </a>
-              </div>
+                </motion.a>
+              </motion.div>
             ))}
           </div>
-          <p className="mt-5 font-cond uppercase tracking-[.14em] text-xs text-bone-dim">
+          
+          <motion.p 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.4, duration: 0.6 }}
+            className="mt-6 font-cond uppercase tracking-[.15em] text-xs font-bold text-neutral-400"
+          >
             Open Mon–Sat · Morning 6 AM – 12 PM · Evening 4 PM – 10 PM · Sunday closed
-          </p>
+          </motion.p>
         </Reveal>
       </div>
     </section>

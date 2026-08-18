@@ -1,20 +1,62 @@
+"use client";
+
+import { motion } from "framer-motion";
 import UploadImage, { isLocalUpload } from "./UploadImage";
-import Reveal from "./Reveal";
+
+const EASE = [0.16, 1, 0.3, 1];
 
 function TrainerPhoto({ name, photoUrl }) {
   return (
-    <div className="relative aspect-[3/4] border border-white/10 overflow-hidden">
-      {photoUrl ? (
-        isLocalUpload(photoUrl) ? (
-          <UploadImage src={photoUrl} alt={name} fill className="object-cover" />
+    <div className="relative aspect-[3/4] border border-white/10 bg-black shadow-2xl overflow-hidden group rounded-none">
+      {/* Photo itself: starts slightly zoomed + dimmed, settles into place as it enters view */}
+      <motion.div
+        initial={{ scale: 1.18, opacity: 0 }}
+        whileInView={{ scale: 1, opacity: 1 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 1.1, ease: EASE }}
+        className="absolute inset-0 w-full h-full"
+      >
+        {photoUrl ? (
+          isLocalUpload(photoUrl) ? (
+            <UploadImage
+              src={photoUrl}
+              alt={name}
+              fill
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105 filter grayscale contrast-125"
+            />
+          ) : (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={photoUrl}
+              alt={name}
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 filter grayscale contrast-125"
+            />
+          )
         ) : (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={photoUrl} alt={name} className="absolute inset-0 w-full h-full object-cover" />
-        )
-      ) : (
-        <div className="absolute inset-0 bg-gradient-to-br from-[#3a2d1c] via-[#1d1815] to-[#141110]" />
-      )}
-      <div className="absolute inset-3.5 border border-brass/30 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-br from-[#2a2218] via-[#161311] to-[#0a0908]" />
+        )}
+      </motion.div>
+
+      {/* Curtain wipe: solid panel slides up off the photo on reveal, like a shutter lifting */}
+      <motion.div
+        initial={{ y: "0%" }}
+        whileInView={{ y: "-100%" }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.9, ease: EASE, delay: 0.15 }}
+        className="absolute inset-0 bg-black z-10 pointer-events-none"
+      />
+
+      {/* Clean Inner Frame matching landing page vibe */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.6, ease: EASE, delay: 0.9 }}
+        className="absolute inset-3.5 border border-white/20 pointer-events-none transition-colors duration-500 group-hover:border-white/50"
+      />
+
+      {/* Dark Vignette Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
     </div>
   );
 }
@@ -23,61 +65,151 @@ function TrainerBlock({ trainer, reversed, showHeader }) {
   const [firstName, ...rest] = (trainer.name || "").split(" ");
   const lastName = rest.join(" ");
 
+  const textContainer = {
+    hidden: {},
+    visible: {
+      transition: { staggerChildren: 0.09, delayChildren: 0.1 },
+    },
+  };
+
+  const textItem = {
+    hidden: { opacity: 0, y: 22 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.65, ease: EASE } },
+  };
+
   return (
     <div
       className={`grid md:grid-cols-[0.85fr_1.15fr] gap-10 md:gap-16 items-center ${
-        showHeader ? "" : "mt-20 md:mt-28"
+        showHeader ? "" : "mt-24 md:mt-36 pt-16 border-t border-white/10 relative overflow-hidden"
       }`}
     >
-      <Reveal className={reversed ? "md:order-2" : ""}>
+      {!showHeader && (
+        <motion.span
+          initial={{ scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true, amount: 0.6 }}
+          transition={{ duration: 0.9, ease: EASE }}
+          style={{ transformOrigin: "left" }}
+          className="absolute top-16 left-0 right-0 h-px bg-white/60"
+        />
+      )}
+
+      <div className={reversed ? "md:order-2" : ""}>
         <TrainerPhoto name={trainer.name} photoUrl={trainer.photoUrl} />
-      </Reveal>
-      <Reveal delay={0.1} className={reversed ? "md:order-1" : ""}>
+      </div>
+
+      <motion.div
+        variants={textContainer}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        className={reversed ? "md:order-1" : ""}
+      >
         {showHeader && (
-          <>
-            <p className="font-cond uppercase tracking-[.22em] text-[13px] font-semibold text-brass flex items-center gap-3">
-              <span className="w-7 h-px bg-brass" /> The team
-            </p>
-            <h2 className="font-display font-extrabold uppercase leading-[.92] text-[38px] sm:text-[56px] mt-4">
-              Meet your <em className="not-italic text-brass">coaches</em>
-            </h2>
-          </>
-        )}
-        {!showHeader && trainer.role && (
-          <p className="font-cond uppercase tracking-[.22em] text-[13px] font-semibold text-brass flex items-center gap-3">
-            <span className="w-7 h-px bg-brass" /> {trainer.role}
-          </p>
-        )}
-        <h3
-          className={`font-display font-extrabold uppercase leading-[.92] text-[32px] sm:text-[44px] ${
-            showHeader ? "mt-8" : "mt-4"
-          }`}
-        >
-          {firstName} <em className="not-italic text-brass">{lastName}</em>
-        </h3>
-        {showHeader && trainer.role && (
-          <p className="mt-2 font-cond uppercase tracking-[.14em] text-sm text-bone-dim">{trainer.role}</p>
-        )}
-        {trainer.bio && <p className="mt-5 max-w-[56ch] text-bone-dim font-light">{trainer.bio}</p>}
-        {trainer.bioExtra && <p className="mt-4 max-w-[56ch] text-bone-dim font-light">{trainer.bioExtra}</p>}
-        {trainer.credentials?.length > 0 && (
-          <div className="flex flex-wrap gap-2.5 mt-6">
-            {trainer.credentials.map((c) => (
-              <span
-                key={c}
-                className="font-cond uppercase tracking-[.13em] text-xs px-3.5 py-1.5 border border-white/10 text-bone-dim"
-              >
-                {c}
-              </span>
-            ))}
+          <div className="mb-6">
+            <motion.p
+              variants={textItem}
+              className="font-cond uppercase tracking-[.25em] text-xs font-bold text-neutral-400 flex items-center gap-3"
+            >
+              <motion.span
+                initial={{ width: 0 }}
+                whileInView={{ width: "2rem" }}
+                viewport={{ once: true, amount: 0.6 }}
+                transition={{ duration: 0.6, ease: EASE, delay: 0.15 }}
+                className="h-px bg-white/40 inline-block"
+              />
+              The team
+            </motion.p>
+
+            {/* Title styled with clean typography matching Hero section */}
+            <motion.h2
+              variants={textItem}
+              className="font-display font-black uppercase leading-[0.88] text-[48px] sm:text-[68px] lg:text-[80px] tracking-tight text-white mt-3 selection:bg-white selection:text-black"
+            >
+              Meet your <em className="not-italic text-neutral-400 font-normal">coaches</em>
+            </motion.h2>
           </div>
         )}
-        {trainer.quote && (
-          <blockquote className="mt-7 pl-5 border-l-2 border-brass font-display font-semibold uppercase text-[21px] sm:text-[27px] leading-tight">
-            &ldquo;{trainer.quote}&rdquo;
-          </blockquote>
+
+        {!showHeader && trainer.role && (
+          <motion.p
+            variants={textItem}
+            className="font-cond uppercase tracking-[.25em] text-xs font-bold text-neutral-400 flex items-center gap-3 mb-2"
+          >
+            <motion.span
+              initial={{ width: 0 }}
+              whileInView={{ width: "2rem" }}
+              viewport={{ once: true, amount: 0.6 }}
+              transition={{ duration: 0.6, ease: EASE, delay: 0.15 }}
+              className="h-px bg-white/40 inline-block"
+            />
+            {trainer.role}
+          </motion.p>
         )}
-      </Reveal>
+
+        <motion.h3
+          variants={textItem}
+          className={`font-display font-black uppercase leading-[0.9] tracking-tight text-[36px] sm:text-[52px] text-white ${
+            showHeader ? "mt-4" : "mt-2"
+          }`}
+        >
+          {firstName} <em className="not-italic text-neutral-400 font-normal">{lastName}</em>
+        </motion.h3>
+
+        {showHeader && trainer.role && (
+          <motion.p
+            variants={textItem}
+            className="mt-2.5 font-cond uppercase tracking-[.18em] text-xs font-bold text-neutral-400"
+          >
+            {trainer.role}
+          </motion.p>
+        )}
+
+        {trainer.bio && (
+          <motion.p
+            variants={textItem}
+            className="mt-6 max-w-[56ch] text-neutral-300 font-normal text-sm sm:text-[16px] leading-relaxed"
+          >
+            {trainer.bio}
+          </motion.p>
+        )}
+
+        {trainer.bioExtra && (
+          <motion.p
+            variants={textItem}
+            className="mt-4 max-w-[56ch] text-neutral-300 font-normal text-sm sm:text-[16px] leading-relaxed"
+          >
+            {trainer.bioExtra}
+          </motion.p>
+        )}
+
+        {trainer.credentials?.length > 0 && (
+          <motion.div variants={textItem} className="flex flex-wrap gap-2.5 mt-8">
+            {trainer.credentials.map((c, idx) => (
+              <motion.span
+                key={c}
+                initial={{ opacity: 0, y: 10, scale: 0.94 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, amount: 0.6 }}
+                transition={{ duration: 0.45, ease: EASE, delay: 0.05 * idx }}
+                whileHover={{ scale: 1.03 }}
+                className="font-cond uppercase tracking-[.15em] text-[11px] font-bold px-3.5 py-1.5 border border-white/20 bg-white/[0.03] text-neutral-300 backdrop-blur-sm transition-colors duration-300 hover:bg-white hover:text-black hover:border-white"
+              >
+                {c}
+              </motion.span>
+            ))}
+          </motion.div>
+        )}
+
+        {trainer.quote && (
+          <motion.blockquote
+            variants={textItem}
+            className="mt-8 pl-5 border-l-2 border-white font-display font-bold uppercase text-[20px] sm:text-[26px] leading-tight tracking-wide text-white"
+          >
+            &ldquo;{trainer.quote}&rdquo;
+          </motion.blockquote>
+        )}
+      </motion.div>
     </div>
   );
 }
@@ -109,8 +241,8 @@ export default function Coach({ trainers = [], ownerName, ownerPhotoUrl }) {
   if (list.length === 0) return null;
 
   return (
-    <section id="coach" className="py-24 md:py-32">
-      <div className="w-[92%] max-w-[1200px] mx-auto">
+    <section id="coach" className="relative py-24 md:py-36 bg-black text-white selection:bg-white selection:text-black overflow-hidden">
+      <div className="w-[92%] max-w-[1300px] mx-auto">
         {list.map((trainer, i) => (
           <TrainerBlock key={trainer._id} trainer={trainer} reversed={i % 2 === 1} showHeader={i === 0} />
         ))}

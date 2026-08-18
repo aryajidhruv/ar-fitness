@@ -1,97 +1,105 @@
-"use client";
+// "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import SiteLogo from "./SiteLogo";
+// import { useState } from "react";
+// import Image from "next/image";
 
-const LINKS = [
-  { href: "#coach", label: "Team" },
-  { href: "#programs", label: "Programs" },
-  { href: "#online", label: "Online" },
-  { href: "#results", label: "Results" },
-  { href: "#gallery", label: "Gallery" },
-  { href: "#instagram", label: "Instagram" },
-  { href: "#plans", label: "Membership" },
-  { href: "#visit", label: "Visit" }
-];
+// export default function Navbar({ gymName, logoUrl }) {
+//   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-export default function Nav({ gymName, whatsappNumber, logoUrl }) {
-  const [stuck, setStuck] = useState(false);
-  const [open, setOpen] = useState(false);
+//   const navLinks = [
+//     { label: "TEAM", href: "#team" },
+//     { label: "PROGRAMS", href: "#programs" },
+//     { label: "ONLINE", href: "#online" },
+//     { label: "RESULTS", href: "#results" },
+//     { label: "GALLERY", href: "#gallery" },
+//     { label: "INSTAGRAM", href: "#instagram" },
+//     { label: "MEMBERSHIP", href: "#membership" },
+//     { label: "VISIT", href: "#visit" },
+//   ];
 
-  useEffect(() => {
-    const onScroll = () => setStuck(window.scrollY > 30);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+//   return (
+//     <header className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md">
+//       <div className="w-[94%] max-w-[1400px] mx-auto flex items-center justify-between py-5">
+        
+//         {/* Brand Logo & Name */}
+//         <a href="#top" className="flex items-center gap-3">
+//           {logoUrl ? (
+//             <div className="relative w-8 h-8 rounded bg-white/10 flex items-center justify-center overflow-hidden">
+//               <Image
+//                 src={logoUrl}
+//                 alt={gymName || "AR Fitness"}
+//                 width={32}
+//                 height={32}
+//                 className="object-contain"
+//               />
+//             </div>
+//           ) : (
+//             <div className="w-7 h-7 bg-white text-black font-cond font-black text-xs flex items-center justify-center tracking-tighter">
+//               AR
+//             </div>
+//           )}
+//           <span className="font-display font-black text-2xl uppercase tracking-wider text-white">
+//             {gymName || "AR FITNESS"}
+//           </span>
+//         </a>
 
-  const waHref = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-    `Hi ${gymName ? "" : ""}I want to book a free trial at ${gymName}`
-  )}`;
+//         {/* Desktop Nav Links with Hover Underline */}
+//         <nav className="hidden lg:flex items-center gap-7">
+//           {navLinks.map((link) => (
+//             <a
+//               key={link.label}
+//               href={link.href}
+//               className="font-cond font-bold text-xs uppercase tracking-[0.18em] text-neutral-300 hover:text-white hover:underline underline-offset-8 decoration-2 decoration-white transition-all"
+//             >
+//               {link.label}
+//             </a>
+//           ))}
+//         </nav>
 
-  return (
-    <nav
-      className={`fixed top-0 inset-x-0 z-[9000] h-[68px] flex items-center transition-colors duration-300 ${
-        stuck ? "bg-iron/90 backdrop-blur-md border-b border-white/10" : "bg-transparent border-b border-transparent"
-      }`}
-    >
-      <div className="w-[92%] max-w-[1200px] mx-auto flex items-center justify-between gap-5">
-        <Link href="#top" className="flex items-center">
-          <SiteLogo logoUrl={logoUrl} gymName={gymName} variant="inline" />
-        </Link>
+//         {/* Right Action / Language Selector */}
+//         <div className="hidden lg:flex items-center gap-6">
+//           <a
+//             href="#trial"
+//             className="bg-white text-black font-cond font-black text-xs uppercase tracking-[0.16em] px-6 py-2.5 rounded-none hover:bg-neutral-200 transition-colors"
+//           >
+//             FREE TRIAL
+//           </a>
+//           <span className="font-cond text-xs font-bold tracking-wider text-neutral-400">
+//             DE / <span className="text-white underline underline-offset-4">EN</span>
+//           </span>
+//         </div>
 
-        <div className="hidden md:flex gap-8 font-cond uppercase tracking-[.13em] text-[14.5px] font-medium">
-          {LINKS.map((l) => (
-            <a key={l.href} href={l.href} className="text-bone-dim hover:text-bone transition-colors">
-              {l.label}
-            </a>
-          ))}
-        </div>
+//         {/* Mobile Toggle Button */}
+//         <button
+//           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+//           className="lg:hidden text-white focus:outline-none p-1"
+//           aria-label="Toggle menu"
+//         >
+//           <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//             {mobileMenuOpen ? (
+//               <path strokeLinecap="square" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+//             ) : (
+//               <path strokeLinecap="square" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+//             )}
+//           </svg>
+//         </button>
+//       </div>
 
-        <a
-          href={waHref}
-          target="_blank"
-          rel="noopener"
-          className="hidden md:inline-flex items-center gap-2 px-[18px] py-[9px] font-cond uppercase tracking-[.14em] text-[13px] font-semibold border border-brass bg-brass text-iron hover:bg-brass-lite hover:-translate-y-0.5 transition-all"
-        >
-          Free trial
-        </a>
-
-        <button
-          className="md:hidden w-10 h-10 grid place-items-center"
-          aria-label="Open menu"
-          aria-expanded={open}
-          onClick={() => setOpen((o) => !o)}
-        >
-          <span className="block w-5 h-px bg-bone relative">
-            <span
-              className={`absolute left-0 w-5 h-px bg-bone transition-transform ${
-                open ? "top-0 rotate-45" : "-top-1.5"
-              }`}
-            />
-            <span
-              className={`absolute left-0 w-5 h-px bg-bone transition-transform ${
-                open ? "top-0 -rotate-45" : "top-1.5"
-              }`}
-            />
-          </span>
-        </button>
-      </div>
-
-      {open && (
-        <div className="md:hidden absolute top-[68px] inset-x-0 bg-iron-2 border-b border-white/10 flex flex-col py-3">
-          {LINKS.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              onClick={() => setOpen(false)}
-              className="px-[4vw] py-3.5 font-cond uppercase tracking-[.14em] border-b border-white/10"
-            >
-              {l.label}
-            </a>
-          ))}
-        </div>
-      )}
-    </nav>
-  );
-}
+//       {/* Mobile Drawer Dropdown */}
+//       {mobileMenuOpen && (
+//         <div className="lg:hidden bg-black/95 px-6 py-6 flex flex-col gap-4">
+//           {navLinks.map((link) => (
+//             <a
+//               key={link.label}
+//               href={link.href}
+//               onClick={() => setMobileMenuOpen(false)}
+//               className="font-cond font-bold text-sm uppercase tracking-widest text-neutral-200 hover:text-white hover:underline underline-offset-4"
+//             >
+//               {link.label}
+//             </a>
+//           ))}
+//         </div>
+//       )}
+//     </header>
+//   );
+// }

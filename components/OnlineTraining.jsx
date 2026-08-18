@@ -1,3 +1,6 @@
+"use client";
+
+import { motion } from "framer-motion";
 import Reveal from "./Reveal";
 import {
   ICON_STROKE,
@@ -40,17 +43,23 @@ export default function OnlineTraining({ whatsappNumber, gymName, ownerName }) {
   )}`;
 
   return (
-    <section id="online" className="bg-iron-2 border-y border-white/10 py-24 md:py-32">
-      <div className="w-[92%] max-w-[1200px] mx-auto">
+    <section id="online" className="bg-black border-y border-white/10 py-24 md:py-32 text-white selection:bg-white selection:text-black overflow-hidden">
+      <div className="w-[92%] max-w-[1300px] mx-auto">
         <Reveal>
-          <p className="font-cond uppercase tracking-[.22em] text-[13px] font-semibold text-brass flex items-center gap-3">
-            <span className="w-7 h-px bg-brass" /> Online training
-          </p>
-          <h2 className="font-display font-extrabold uppercase leading-[.92] text-[38px] sm:text-[56px] mt-4 max-w-[16ch]">
+          <motion.p 
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="font-cond uppercase tracking-[.25em] text-xs font-bold text-neutral-400 flex items-center gap-3"
+          >
+            <span className="w-8 h-px bg-white/40" /> Online training
+          </motion.p>
+          <h2 className="font-display font-black uppercase leading-[0.88] text-[40px] sm:text-[60px] lg:text-[72px] tracking-tight text-white mt-3 max-w-[16ch]">
             Train anywhere.<br />
-            Stay <em className="not-italic text-brass">accountable</em>.
+            Stay <em className="not-italic text-neutral-400 font-normal">accountable</em>.
           </h2>
-          <p className="mt-5 max-w-[58ch] text-bone-dim font-light text-[17px]">
+          <p className="mt-5 max-w-[58ch] text-neutral-300 font-normal text-sm sm:text-[16px] leading-relaxed">
             Can&rsquo;t make it to the gym every day? Same coaching, programming and check-ins — delivered to your phone.
             Whether you moved cities, travel for work or prefer training at home, {coachFirst} keeps you on plan.
           </p>
@@ -58,52 +67,102 @@ export default function OnlineTraining({ whatsappNumber, gymName, ownerName }) {
 
         <Reveal delay={0.08}>
           <div className="grid md:grid-cols-3 gap-px bg-white/10 border border-white/10 mt-12">
-            {STEPS.map((step) => (
-              <article key={step.title} className="bg-iron p-8">
-                <step.Icon className="w-9 h-9 text-brass mb-4" strokeWidth={ICON_STROKE} aria-hidden="true" />
-                <h3 className="font-display font-bold uppercase text-[22px] leading-tight">{step.title}</h3>
-                <p className="text-bone-dim font-light text-[15.5px] mt-2.5">{step.desc}</p>
-              </article>
+            {STEPS.map((step, index) => (
+              <motion.article
+                key={step.title}
+                initial={{ opacity: 0, y: 40, rotateX: 10 }}
+                whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+                viewport={{ once: true }}
+                transition={{ 
+                  duration: 0.7, 
+                  delay: index * 0.1, 
+                  ease: [0.16, 1, 0.3, 1] 
+                }}
+                whileHover={{ 
+                  backgroundColor: "#0c0c0c", 
+                  scale: 1.02,
+                  zIndex: 20,
+                  transition: { duration: 0.2 }
+                }}
+                className="bg-black p-8 relative overflow-hidden group"
+              >
+                <div className="absolute top-0 left-0 h-1 w-0 bg-white transition-all duration-500 group-hover:w-full" />
+                <motion.div
+                  whileHover={{ rotate: [0, -12, 12, 0], scale: 1.15 }}
+                  transition={{ duration: 0.4 }}
+                  className="inline-block"
+                >
+                  <step.Icon className="w-9 h-9 text-white mb-4" strokeWidth={ICON_STROKE} aria-hidden="true" />
+                </motion.div>
+                <h3 className="font-display font-bold uppercase text-[22px] tracking-tight text-white group-hover:translate-x-1 transition-transform duration-300">
+                  {step.title}
+                </h3>
+                <p className="text-neutral-300 font-normal text-sm sm:text-base leading-relaxed mt-2.5">
+                  {step.desc}
+                </p>
+              </motion.article>
             ))}
           </div>
         </Reveal>
 
         <div className="grid md:grid-cols-[1.1fr_0.9fr] gap-10 md:gap-16 items-start mt-14">
           <Reveal delay={0.1}>
-            <div className="border border-white/10 p-8">
+            <motion.div 
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              className="border border-white/10 bg-black p-8 hover:border-white/30 transition-colors"
+            >
               <div className="flex items-center gap-3 mb-6">
-                <Timer className="w-8 h-8 text-brass shrink-0" strokeWidth={ICON_STROKE} aria-hidden="true" />
-                <h3 className="font-display font-bold uppercase text-[26px] leading-tight">What&rsquo;s included</h3>
+                <Timer className="w-8 h-8 text-white shrink-0" strokeWidth={ICON_STROKE} aria-hidden="true" />
+                <h3 className="font-display font-bold uppercase text-[26px] tracking-tight text-white">What&rsquo;s included</h3>
               </div>
               <ul className="space-y-3.5">
-                {INCLUDES.map((item) => (
-                  <li key={item} className="flex gap-3 items-start text-[15px] font-light text-bone-dim">
-                    <span className="w-[5px] h-[5px] bg-brass rotate-45 flex-none mt-2" />
+                {INCLUDES.map((item, idx) => (
+                  <motion.li
+                    key={item}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: idx * 0.06 + 0.2, duration: 0.5 }}
+                    className="flex gap-3 items-start text-sm sm:text-base font-normal text-neutral-300"
+                  >
+                    <span className="w-[5px] h-[5px] bg-white rotate-45 flex-none mt-2" />
                     {item}
-                  </li>
+                  </motion.li>
                 ))}
               </ul>
-            </div>
+            </motion.div>
           </Reveal>
 
           <Reveal delay={0.14}>
-            <div className="border border-brass/40 bg-iron p-8">
-              <p className="font-cond uppercase tracking-[.18em] text-xs text-brass">Anywhere in India</p>
-              <p className="font-display font-black text-[42px] leading-none mt-3">
+            <motion.div 
+              initial={{ opacity: 0, x: 40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              className="border border-white/20 bg-black p-8 relative overflow-hidden group"
+            >
+              <div className="absolute top-0 right-0 h-full w-1 bg-white/20 group-hover:bg-white transition-all duration-500" />
+              <p className="font-cond uppercase tracking-[.18em] text-xs font-bold text-neutral-400">Anywhere in India</p>
+              <p className="font-display font-black uppercase text-[42px] leading-none tracking-tight text-white mt-3">
                 Same coach.<br />Your schedule.
               </p>
-              <p className="mt-4 text-bone-dim font-light text-[15px]">
+              <p className="mt-4 text-neutral-300 font-normal text-sm sm:text-base leading-relaxed">
                 No app downloads or complicated dashboards — just a clear plan and direct access to your coach on WhatsApp.
               </p>
-              <a
+              <motion.a
+                whileHover={{ scale: 1.02, backgroundColor: "#f5f5f5" }}
+                whileTap={{ scale: 0.98 }}
                 href={waHref}
                 target="_blank"
-                rel="noopener"
-                className="inline-flex items-center mt-7 px-[22px] py-3 font-cond uppercase tracking-[.14em] font-semibold text-[14.5px] border border-brass bg-brass text-iron hover:bg-brass-lite hover:-translate-y-0.5 transition-all"
+                rel="noopener noreferrer"
+                className="inline-flex items-center mt-7 px-8 py-4 font-cond uppercase tracking-[.15em] font-bold text-xs sm:text-sm bg-white text-black transition-colors shadow-2xl"
               >
                 Enquire about online training
-              </a>
-            </div>
+              </motion.a>
+            </motion.div>
           </Reveal>
         </div>
       </div>

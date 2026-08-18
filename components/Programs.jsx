@@ -1,3 +1,6 @@
+"use client";
+
+import { motion } from "framer-motion";
 import Reveal from "./Reveal";
 import {
   Activity,
@@ -58,41 +61,90 @@ const FOCUS_AREAS = [
 
 export default function Programs() {
   return (
-    <section id="programs" className="pb-24 md:pb-32">
-      <div className="w-[92%] max-w-[1200px] mx-auto">
+    <section id="programs" className="py-24 md:py-32 bg-black text-white selection:bg-white selection:text-black overflow-hidden">
+      <div className="w-[92%] max-w-[1300px] mx-auto">
         <Reveal>
-          <p className="font-cond uppercase tracking-[.22em] text-[13px] font-semibold text-brass flex items-center gap-3">
-            <span className="w-7 h-px bg-brass" /> What we train
-          </p>
-          <h2 className="font-display font-extrabold uppercase leading-[.92] text-[38px] sm:text-[56px] mt-4">
-            Pick your <em className="not-italic text-brass">goal</em>,<br />we&rsquo;ll build the plan
+          <motion.p 
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="font-cond uppercase tracking-[.25em] text-xs font-bold text-neutral-400 flex items-center gap-3"
+          >
+            <span className="w-8 h-px bg-white/40" /> What we train
+          </motion.p>
+          <h2 className="font-display font-black uppercase leading-[0.88] text-[40px] sm:text-[60px] lg:text-[72px] tracking-tight text-white mt-3">
+            Pick your <em className="not-italic text-neutral-400 font-normal">goal</em>,<br />we&rsquo;ll build the plan
           </h2>
         </Reveal>
 
         <Reveal delay={0.08}>
-          <div className="mt-8 flex flex-wrap gap-3">
-            {FOCUS_AREAS.map(({ label, Icon }) => (
-              <span
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            className="mt-8 flex flex-wrap gap-3"
+          >
+            {FOCUS_AREAS.map(({ label, Icon }, i) => (
+              <motion.span
                 key={label}
-                className="inline-flex items-center gap-2.5 px-4 py-2.5 border border-white/10 bg-iron-2 text-bone-dim"
+                whileHover={{ scale: 1.06, rotate: i % 2 === 0 ? 2 : -2, backgroundColor: "#111" }}
+                whileTap={{ scale: 0.96 }}
+                className="inline-flex items-center gap-2.5 px-4 py-2.5 border border-white/10 bg-black text-neutral-300 cursor-default transition-colors"
               >
-                <Icon className="w-5 h-5 text-brass shrink-0" strokeWidth={ICON_STROKE} aria-hidden="true" />
-                <span className="font-cond uppercase tracking-[.14em] text-[12px]">{label}</span>
-              </span>
+                <Icon className="w-5 h-5 text-white shrink-0" strokeWidth={ICON_STROKE} aria-hidden="true" />
+                <span className="font-cond uppercase tracking-[.14em] text-[12px] font-bold">{label}</span>
+              </motion.span>
             ))}
-          </div>
+          </motion.div>
         </Reveal>
 
         <Reveal delay={0.1}>
           <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-px bg-white/10 border border-white/10 mt-10">
-            {PROGRAMS.map((p) => (
-              <article key={p.title} className="group bg-iron hover:bg-iron-2 transition-colors p-8 relative overflow-hidden">
-                <div className="absolute left-0 top-0 h-0.5 w-0 bg-brass transition-all duration-500 group-hover:w-full" />
-                <p.Icon className="w-9 h-9 text-brass mb-4" strokeWidth={ICON_STROKE} aria-hidden="true" />
-                <h3 className="font-display font-bold uppercase text-[24px] leading-tight">{p.title}</h3>
-                <p className="text-bone-dim font-light text-[15.5px] mt-2.5">{p.desc}</p>
-                <p className="font-cond uppercase tracking-[.16em] text-[11.5px] text-brass mt-4">{p.meta}</p>
-              </article>
+            {PROGRAMS.map((p, index) => (
+              <motion.article
+                key={p.title}
+                initial={{ opacity: 0, y: 50, rotateX: 15 }}
+                whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+                viewport={{ once: true }}
+                transition={{ 
+                  duration: 0.7, 
+                  delay: index * 0.08, 
+                  ease: [0.16, 1, 0.3, 1] 
+                }}
+                whileHover={{ 
+                  backgroundColor: "#0c0c0c", 
+                  scale: 1.02,
+                  zIndex: 20,
+                  transition: { duration: 0.2 }
+                }}
+                className="group bg-black p-8 relative overflow-hidden"
+              >
+                {/* Expanding Top Border Bar */}
+                <div className="absolute left-0 top-0 h-1 w-0 bg-white transition-all duration-500 group-hover:w-full" />
+                
+                {/* Floating Icon Animation on Card Hover */}
+                <motion.div
+                  whileHover={{ rotate: [0, -10, 10, 0], scale: 1.15 }}
+                  transition={{ duration: 0.4 }}
+                  className="inline-block"
+                >
+                  <p.Icon className="w-9 h-9 text-white mb-4" strokeWidth={ICON_STROKE} aria-hidden="true" />
+                </motion.div>
+
+                <h3 className="font-display font-bold uppercase text-[24px] tracking-tight text-white group-hover:translate-x-1 transition-transform duration-300">
+                  {p.title}
+                </h3>
+                
+                <p className="text-neutral-300 font-normal text-sm sm:text-base leading-relaxed mt-2.5">
+                  {p.desc}
+                </p>
+                
+                <p className="font-cond uppercase tracking-[.16em] text-[11.5px] font-bold text-neutral-400 mt-4 group-hover:text-white transition-colors">
+                  {p.meta}
+                </p>
+              </motion.article>
             ))}
           </div>
         </Reveal>

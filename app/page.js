@@ -1,5 +1,5 @@
 import { getTransformations, getGalleryItems, getInstagramPosts, getTestimonials, getTrainers, getSettings } from "@/lib/data";
-import Nav from "@/components/Nav";
+import PageLoader from "@/components/PageLoader";
 import Hero from "@/components/Hero";
 import Marquee from "@/components/Marquee";
 import Coach from "@/components/Coach";
@@ -38,8 +38,16 @@ export default async function HomePage() {
 
   return (
     <div className="grain">
-      <Nav gymName={settings.gymName} whatsappNumber={settings.whatsappNumber} logoUrl={settings.logoUrl} />
-      <Hero featured={featured} whatsappNumber={settings.whatsappNumber} gymName={settings.gymName} />
+      {/* 1. Plays the loading sequence on initial page load */}
+      <PageLoader gymName={settings.gymName} />
+
+      {/* 2. Merged Navigation and Hero Component */}
+      <Hero 
+        featured={featured} 
+        whatsappNumber={settings.whatsappNumber} 
+        gymName={settings.gymName} 
+        logoUrl={settings.logoUrl}
+      />
       <Marquee />
       <Coach trainers={trainers} ownerName={settings.ownerName} ownerPhotoUrl={settings.ownerPhotoUrl} />
       <Programs />
