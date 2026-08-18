@@ -80,7 +80,10 @@ export default async function RootLayout({ children }) {
     ...(settings.latitude && settings.longitude
       ? { geo: { "@type": "GeoCoordinates", latitude: settings.latitude, longitude: settings.longitude } }
       : {}),
-    openingHours: ["Mo-Sa " + toIsoHours(settings.hoursWeekday), "Su " + toIsoHours(settings.hoursSunday)],
+    openingHours: [
+      "Mo-Sa " + toIsoHours(settings.hoursWeekday),
+      ...(settings.hoursSunday?.toLowerCase() === "closed" ? [] : ["Su " + toIsoHours(settings.hoursSunday)])
+    ],
     founder: { "@type": "Person", name: settings.ownerName }
   };
 

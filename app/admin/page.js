@@ -4,6 +4,7 @@ import Transformation from "@/models/Transformation";
 import GalleryItem from "@/models/GalleryItem";
 import InstagramPost from "@/models/InstagramPost";
 import Testimonial from "@/models/Testimonial";
+import Trainer from "@/models/Trainer";
 import AdminShell from "@/components/admin/AdminShell";
 import Link from "next/link";
 
@@ -11,8 +12,9 @@ export default async function AdminOverviewPage() {
   const session = await getAdminSession();
   await connectDB();
 
-  const [transformCount, galleryCount, instagramCount, testimonialCount] = await Promise.all([
+  const [transformCount, trainerCount, galleryCount, instagramCount, testimonialCount] = await Promise.all([
     Transformation.countDocuments(),
+    Trainer.countDocuments(),
     GalleryItem.countDocuments(),
     InstagramPost.countDocuments(),
     Testimonial.countDocuments()
@@ -20,6 +22,7 @@ export default async function AdminOverviewPage() {
 
   const cards = [
     { label: "Transformations", count: transformCount, href: "/admin/transformations" },
+    { label: "Trainers", count: trainerCount, href: "/admin/trainers" },
     { label: "Gallery photos", count: galleryCount, href: "/admin/gallery" },
     { label: "Instagram posts", count: instagramCount, href: "/admin/instagram" },
     { label: "Testimonials", count: testimonialCount, href: "/admin/testimonials" }
@@ -51,6 +54,11 @@ export default async function AdminOverviewPage() {
           <li>
             <Link href="/admin/transformations" className="text-brass hover:underline">
               Add a new transformation
+            </Link>
+          </li>
+          <li>
+            <Link href="/admin/trainers" className="text-brass hover:underline">
+              Add or edit trainers
             </Link>
           </li>
           <li>

@@ -9,6 +9,7 @@ import SiteLogo from "@/components/SiteLogo";
 const NAV = [
   { href: "/admin", label: "Overview" },
   { href: "/admin/transformations", label: "Transformations" },
+  { href: "/admin/trainers", label: "Trainers" },
   { href: "/admin/gallery", label: "Inside the gym" },
   { href: "/admin/instagram", label: "Instagram" },
   { href: "/admin/testimonials", label: "Testimonials" },

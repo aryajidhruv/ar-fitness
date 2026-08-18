@@ -5,7 +5,7 @@ import Link from "next/link";
 import SiteLogo from "./SiteLogo";
 
 const LINKS = [
-  { href: "#coach", label: "Coach" },
+  { href: "#coach", label: "Team" },
   { href: "#programs", label: "Programs" },
   { href: "#online", label: "Online" },
   { href: "#results", label: "Results" },
