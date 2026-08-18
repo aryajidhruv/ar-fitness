@@ -22,6 +22,18 @@ export async function POST(req) {
   await connectDB();
   const body = await req.json();
 
+  if (body.featuredInHero) {
+    if (body.isVideo) {
+      return NextResponse.json({ error: "Video transformations cannot be featured in the hero" }, { status: 400 });
+    }
+    await Transformation.updateMany({}, { featuredInHero: false });
+  }
+
+  if (body.order == null) {
+    const last = await Transformation.findOne().sort({ order: -1 }).select("order").lean();
+    body.order = (last?.order ?? -1) + 1;
+  }
+
   const doc = await Transformation.create(body);
 
   // The public homepage is server-rendered and cached; rebuild it now so

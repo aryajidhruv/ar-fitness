@@ -26,6 +26,10 @@ export async function POST(req) {
     return NextResponse.json({ error: "Enter a valid Instagram post or reel URL" }, { status: 400 });
   }
 
+  const existing = await InstagramPost.findOne({ postUrl }).lean();
+  const order =
+    body.order != null ? Number(body.order) : existing?.order ?? (await nextInstagramOrder());
+
   const doc = await InstagramPost.findOneAndUpdate(
     { postUrl },
     {
@@ -35,7 +39,7 @@ export async function POST(req) {
       caption: body.caption?.trim() || "",
       instagramId: body.instagramId || "",
       mediaType: body.mediaType || "IMAGE",
-      order: Number(body.order) || 0,
+      order,
       published: body.published !== false
     },
     { upsert: true, new: true, setDefaultsOnInsert: true }
@@ -43,4 +47,9 @@ export async function POST(req) {
 
   revalidatePath("/");
   return NextResponse.json(doc, { status: 201 });
+}
+
+async function nextInstagramOrder() {
+  const last = await InstagramPost.findOne().sort({ order: -1 }).select("order").lean();
+  return (last?.order ?? -1) + 1;
 }

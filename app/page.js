@@ -29,7 +29,10 @@ export default async function HomePage() {
     getSettings()
   ]);
 
-  const featured = transformations.find((t) => !t.isVideo) || null;
+  const featured =
+    transformations.find((t) => t.featuredInHero && !t.isVideo) ||
+    transformations.find((t) => !t.isVideo) ||
+    null;
   const primaryTrainer = trainers.find((t) => t.isPrimary) || trainers[0];
   const contactName = primaryTrainer?.name || settings.ownerName;
 

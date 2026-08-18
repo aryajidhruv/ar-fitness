@@ -24,6 +24,13 @@ export async function PUT(req, { params }) {
   const existing = await Transformation.findById(id).lean();
   if (!existing) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
+  if (body.featuredInHero) {
+    if (body.isVideo ?? existing.isVideo) {
+      return NextResponse.json({ error: "Video transformations cannot be featured in the hero" }, { status: 400 });
+    }
+    await Transformation.updateMany({ _id: { $ne: id } }, { featuredInHero: false });
+  }
+
   const doc = await Transformation.findByIdAndUpdate(id, body, { new: true });
 
   await deleteUnusedUploads(

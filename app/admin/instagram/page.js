@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { InstagramEmbed } from "@/components/InstagramEmbedClient";
 import AdminShell from "@/components/admin/AdminShell";
+import { sortByOrder } from "@/lib/sortByOrder";
 
 const EMPTY = {
   postUrl: "",
@@ -16,6 +17,8 @@ export default function AdminInstagramPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+
+  const sortedItems = useMemo(() => sortByOrder(items), [items]);
 
   async function load() {
     setLoading(true);
@@ -75,6 +78,23 @@ export default function AdminInstagramPage() {
     await load();
   }
 
+  async function reorderList(nextItems) {
+    await fetch("/api/instagram/reorder", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ids: nextItems.map((item) => item._id) })
+    });
+    await load();
+  }
+
+  function moveItem(index, direction) {
+    const next = [...sortedItems];
+    const target = index + direction;
+    if (target < 0 || target >= next.length) return;
+    [next[index], next[target]] = [next[target], next[index]];
+    reorderList(next);
+  }
+
   return (
     <AdminShell>
       <h1 className="font-display font-extrabold uppercase text-3xl">Instagram</h1>
@@ -124,17 +144,43 @@ export default function AdminInstagramPage() {
 
       <div className="mt-10">
         <h2 className="font-cond uppercase tracking-[.14em] text-sm text-bone-dim mb-4">
-          Homepage posts ({items.length})
+          Homepage posts ({sortedItems.length})
         </h2>
+        <p className="text-xs text-bone-dim mb-4">Use the arrows to change the order posts appear on the homepage.</p>
 
         {loading ? (
           <p className="text-bone-dim text-sm">Loading…</p>
-        ) : items.length === 0 ? (
+        ) : sortedItems.length === 0 ? (
           <p className="text-bone-dim text-sm">No Instagram posts yet.</p>
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {items.map((item) => (
+            {sortedItems.map((item, index) => (
               <div key={item._id} className="border border-white/10 p-4 space-y-3">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-xs font-cond uppercase tracking-[.1em] text-bone-dim">
+                    Order {item.order ?? 0}
+                  </span>
+                  <div className="flex gap-1">
+                    <button
+                      type="button"
+                      onClick={() => moveItem(index, -1)}
+                      disabled={index === 0}
+                      className="px-2 py-0.5 text-xs border border-white/15 hover:border-brass disabled:opacity-30"
+                      aria-label="Move up"
+                    >
+                      ↑
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => moveItem(index, 1)}
+                      disabled={index === sortedItems.length - 1}
+                      className="px-2 py-0.5 text-xs border border-white/15 hover:border-brass disabled:opacity-30"
+                      aria-label="Move down"
+                    >
+                      ↓
+                    </button>
+                  </div>
+                </div>
                 <div className="instagram-embed-tile">
                   <InstagramEmbed url={item.postUrl} width="100%" />
                 </div>

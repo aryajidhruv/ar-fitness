@@ -19,6 +19,7 @@ const TransformationSchema = new mongoose.Schema(
     videoPublicId: { type: String, default: "" },
     isVideo: { type: Boolean, default: false },
     order: { type: Number, default: 0 },
+    featuredInHero: { type: Boolean, default: false },
     published: { type: Boolean, default: true }
   },
   { timestamps: true }
