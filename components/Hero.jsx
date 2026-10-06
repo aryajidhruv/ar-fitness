@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 
 const SHARD_COLS = 6;
@@ -51,8 +52,8 @@ function EntranceShatter() {
 export default function Hero({ whatsappNumber, gymName, logoUrl }) {
   const [showAfter, setShowAfter] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [lang, setLang] = useState("EN");
 
+  // Use safe default states to match server and client initial render (fixing hydration errors)
   const [isLoaded, setIsLoaded] = useState(false);
   const [entranceActive, setEntranceActive] = useState(false);
   const [entranceDone, setEntranceDone] = useState(false);
@@ -68,20 +69,29 @@ export default function Hero({ whatsappNumber, gymName, logoUrl }) {
 
   const currentImg = showAfter ? afterImg : beforeImg;
 
+  // Handle session storage checks safely after component mounts
   useEffect(() => {
-    // Triggers right when the PageLoader unmounts / finishes its timeline
-    const timer = setTimeout(() => {
-      setIsLoaded(true);
+    const hasLoadedBefore = sessionStorage.getItem("ar_fitness_loaded");
+
+    if (!hasLoadedBefore) {
+      sessionStorage.setItem("ar_fitness_loaded", "true");
       setEntranceActive(true);
 
-      const clearTimer = setTimeout(() => {
-        setEntranceDone(true);
-      }, 900);
+      const timer = setTimeout(() => {
+        setIsLoaded(true);
 
-      return () => clearTimeout(clearTimer);
-    }, LOADER_TOTAL_MS);
+        const clearTimer = setTimeout(() => {
+          setEntranceDone(true);
+        }, 900);
 
-    return () => clearTimeout(timer);
+        return () => clearTimeout(clearTimer);
+      }, LOADER_TOTAL_MS);
+
+      return () => clearTimeout(timer);
+    } else {
+      setIsLoaded(true);
+      setEntranceDone(true);
+    }
   }, []);
 
   const handleToggle = () => {
@@ -92,7 +102,7 @@ export default function Hero({ whatsappNumber, gymName, logoUrl }) {
     { label: "TEAM", href: "#team" },
     { label: "PROGRAMS", href: "#programs" },
     { label: "ONLINE", href: "#online" },
-    { label: "RESULTS", href: "#results" },
+    { label: "RESULTS", href: "/transformations" },
     { label: "GALLERY", href: "#gallery" },
     { label: "INSTAGRAM", href: "#instagram" },
     { label: "MEMBERSHIP", href: "#membership" },
@@ -149,7 +159,7 @@ export default function Hero({ whatsappNumber, gymName, logoUrl }) {
                   alt={gymName || "AR Fitness"}
                   width={32}
                   height={32}
-                  className="object-contain"
+                  className="object-contain filter grayscale contrast-200"
                 />
               </div>
             ) : (
@@ -162,15 +172,26 @@ export default function Hero({ whatsappNumber, gymName, logoUrl }) {
             </span>
           </a>
 
+          {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-7">
             {navLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                className="font-cond font-bold text-xs uppercase tracking-[0.18em] text-neutral-300 hover:text-white hover:underline underline-offset-8 decoration-2 decoration-white transition-all"
-              >
-                {link.label}
-              </a>
+              link.href.startsWith("/") ? (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  className="font-cond font-bold text-xs uppercase tracking-[0.18em] text-neutral-300 hover:text-white hover:underline underline-offset-8 decoration-2 decoration-white transition-all"
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className="font-cond font-bold text-xs uppercase tracking-[0.18em] text-neutral-300 hover:text-white hover:underline underline-offset-8 decoration-2 decoration-white transition-all"
+                >
+                  {link.label}
+                </a>
+              )
             ))}
           </nav>
 
@@ -185,34 +206,11 @@ export default function Hero({ whatsappNumber, gymName, logoUrl }) {
             >
               FREE TRIAL
             </motion.a>
-            <div className="flex items-center gap-2 font-cond font-bold text-xs tracking-wider">
-              <button
-                onClick={() => setLang("DE")}
-                className={`transition-colors ${
-                  lang === "DE"
-                    ? "text-white underline underline-offset-4 decoration-2"
-                    : "text-white/50 hover:text-white"
-                }`}
-              >
-                DE
-              </button>
-              <span className="text-white/30">/</span>
-              <button
-                onClick={() => setLang("EN")}
-                className={`transition-colors ${
-                  lang === "EN"
-                    ? "text-white underline underline-offset-4 decoration-2"
-                    : "text-white/50 hover:text-white"
-                }`}
-              >
-                EN
-              </button>
-            </div>
           </div>
 
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden text-white focus:outline-none p-1"
+            className="lg:hidden text-white focus:outline-none p-1 z-50"
             aria-label="Toggle menu"
           >
             <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -225,28 +223,46 @@ export default function Hero({ whatsappNumber, gymName, logoUrl }) {
           </button>
         </div>
 
+        {/* Mobile Menu Dropdown */}
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="lg:hidden bg-black/95 border-b border-white/10 px-6 py-6 flex flex-col gap-4 overflow-hidden"
+              className="lg:hidden bg-black/95 border-b border-white/10 backdrop-blur-xl px-6 py-8"
             >
-              {navLinks.map((link, idx) => (
-                <motion.a
-                  key={link.label}
-                  initial={{ opacity: 0, x: -15 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: idx * 0.04, duration: 0.2 }}
-                  href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="font-cond font-bold text-sm uppercase tracking-widest text-neutral-200 hover:text-white hover:underline underline-offset-4"
+              <div className="flex flex-col gap-5">
+                {navLinks.map((link) => (
+                  link.href.startsWith("/") ? (
+                    <Link
+                      key={link.label}
+                      href={link.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="font-cond font-bold text-sm uppercase tracking-[0.2em] text-neutral-300 hover:text-white transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  ) : (
+                    <a
+                      key={link.label}
+                      href={link.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="font-cond font-bold text-sm uppercase tracking-[0.2em] text-neutral-300 hover:text-white transition-colors"
+                    >
+                      {link.label}
+                    </a>
+                  )
+                ))}
+                <a
+                  href={waHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-4 inline-block text-center bg-white text-black font-cond font-black text-xs uppercase tracking-[0.16em] py-3 shadow-lg"
                 >
-                  {link.label}
-                </motion.a>
-              ))}
+                  FREE TRIAL
+                </a>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -330,14 +346,15 @@ export default function Hero({ whatsappNumber, gymName, logoUrl }) {
               >
                 BOOK A FREE TRIAL
               </motion.a>
-              <motion.a
-                whileHover={{ scale: 1.02, borderColor: "#ffffff" }}
-                whileTap={{ scale: 0.98 }}
-                href="#results"
-                className="inline-flex items-center justify-center border border-white/30 bg-black/50 backdrop-blur-md text-white font-cond font-bold uppercase tracking-[0.15em] text-xs sm:text-sm px-8 py-4 rounded-none transition-colors"
-              >
-                SEE REAL RESULTS
-              </motion.a>
+
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                <Link
+                  href="/transformations"
+                  className="inline-flex items-center justify-center border border-white/30 bg-black/50 backdrop-blur-md text-white font-cond font-bold uppercase tracking-[0.15em] text-xs sm:text-sm px-8 py-4 rounded-none transition-colors hover:border-white"
+                >
+                  EXPLORE TRANSFORMATIONS
+                </Link>
+              </motion.div>
             </motion.div>
           </div>
         </div>

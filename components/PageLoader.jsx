@@ -29,6 +29,34 @@ export default function PageLoader({ gymName = "AR Fitness" }) {
     };
   }, []);
 
+  // Split the gym name into words so each word can stagger in on its own line-friendly unit
+  const nameWords = (gymName || "AR Fitness").split(" ");
+
+  // Build initials for the monogram badge (e.g. "AR Fitness" -> "AF")
+  const initials =
+    nameWords
+      .map((w) => w[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase() || "AR";
+
+  const wordContainer = {
+    hidden: {},
+    visible: {
+      transition: { staggerChildren: 0.12, delayChildren: 0.15 },
+    },
+  };
+
+  const wordItem = {
+    hidden: { opacity: 0, y: 30, filter: "blur(6px)" },
+    visible: {
+      opacity: 1,
+      y: 0,
+      filter: "blur(0px)",
+      transition: { duration: 0.6, ease: [0.19, 1, 0.22, 1] },
+    },
+  };
+
   return (
     <AnimatePresence>
       {/* Phase 1: High-End Sleek Minimalist Gym Equipment Animation */}
@@ -93,7 +121,7 @@ export default function PageLoader({ gymName = "AR Fitness" }) {
         </motion.div>
       )}
 
-      {/* Phase 2: Welcome Screen with Gold Line-Art Lord Ganesha SVG */}
+      {/* Phase 2: Welcome Screen — monogram badge + staggered name reveal */}
       {showWelcome && (
         <motion.div
           key="welcome"
@@ -108,12 +136,12 @@ export default function PageLoader({ gymName = "AR Fitness" }) {
             <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:4rem_4rem]" />
           </div>
 
-          {/* Soft gold radial glow behind the murti */}
+          {/* Soft neutral glow behind the badge */}
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
               background:
-                "radial-gradient(circle at 50% 38%, rgba(212,164,55,0.14) 0%, rgba(212,164,55,0) 60%)",
+                "radial-gradient(circle at 50% 38%, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 60%)",
             }}
           />
 
@@ -124,83 +152,63 @@ export default function PageLoader({ gymName = "AR Fitness" }) {
               transition={{ duration: 0.5, ease: [0.19, 1, 0.22, 1] }}
               className="flex flex-col items-center"
             >
-              {/* Lord Ganesha Line-Art SVG */}
-              <div className="mb-6 flex justify-center">
-                <motion.svg
-                  className="w-28 h-28 sm:w-32 sm:h-32"
-                  viewBox="0 0 200 220"
-                  fill="none"
-                  stroke="url(#ganeshaGold)"
-                  strokeWidth="2.75"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  initial={{ opacity: 0, scale: 0.85 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.7, ease: [0.19, 1, 0.22, 1] }}
-                >
-                  <defs>
-                    <linearGradient id="ganeshaGold" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#f6e27a" />
-                      <stop offset="35%" stopColor="#d4a437" />
-                      <stop offset="65%" stopColor="#c8902a" />
-                      <stop offset="100%" stopColor="#f6e27a" />
-                    </linearGradient>
-                  </defs>
+              {/* Monogram badge */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.6, rotate: -8 }}
+                animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                transition={{ duration: 0.6, ease: [0.19, 1, 0.22, 1] }}
+                className="mb-7 w-16 h-16 sm:w-20 sm:h-20 border border-white/25 flex items-center justify-center relative"
+              >
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 0.5, delay: 0.15, ease: [0.19, 1, 0.22, 1] }}
+                  className="absolute inset-1.5 border border-white/10"
+                />
+                <span className="font-display font-black text-2xl sm:text-3xl uppercase tracking-tight">
+                  {initials}
+                </span>
+              </motion.div>
 
-                  <path
-                    d="M100 8 C104 8, 108 14, 107 19 C106 24, 102 27, 100 30 C98 27, 94 24, 93 19 C92 14, 96 8, 100 8 Z"
-                    fill="url(#ganeshaGold)"
-                    stroke="none"
-                  />
-                  <path d="M88 16 C83 19, 81 24, 83 29" />
-                  <path d="M112 16 C117 19, 119 24, 117 29" />
-                  <path d="M70 38 C82 30, 118 30, 130 38 C124 48, 76 48, 70 38 Z" />
-                  <circle cx="86" cy="38" r="1.6" fill="url(#ganeshaGold)" />
-                  <circle cx="100" cy="36" r="1.8" fill="url(#ganeshaGold)" />
-                  <circle cx="114" cy="38" r="1.6" fill="url(#ganeshaGold)" />
-                  <path d="M93 44 L93 51 M100 42 L100 51 M107 44 L107 51" strokeWidth="2.25" />
-                  <circle cx="100" cy="56" r="1.5" fill="url(#ganeshaGold)" />
-                  <path d="M72 50 C50 48, 36 64, 47 86 C53 99, 65 108, 74 98" />
-                  <path d="M128 50 C150 48, 164 64, 153 86 C147 99, 135 108, 126 98" />
-                  <path
-                    d="M80 65 C86 60, 95 62, 93 70 C91 74, 82 74, 80 65 Z"
-                    fill="url(#ganeshaGold)"
-                    stroke="none"
-                    opacity="0.9"
-                  />
-                  <path
-                    d="M120 65 C114 60, 105 62, 107 70 C109 74, 118 74, 120 65 Z"
-                    fill="url(#ganeshaGold)"
-                    stroke="none"
-                    opacity="0.9"
-                  />
-                  <circle cx="97" cy="79" r="1.4" fill="url(#ganeshaGold)" />
-                  <circle cx="103" cy="79" r="1.4" fill="url(#ganeshaGold)" />
-                  <path d="M100 76 C100 92, 108 100, 116 108 C126 118, 128 130, 118 138 C110 144, 98 141, 94 132 C91 125, 96 118, 104 116" />
-                  <path d="M54 112 C42 116, 40 130, 52 138 C61 144, 71 135, 67 124 C65 119, 58 118, 55 122" />
-                  <path d="M146 112 C158 116, 160 130, 148 138 C139 144, 129 135, 133 124" />
-                  <path d="M128 100 C133 96, 141 96, 145 101" />
-                  <path d="M62 148 C78 134, 122 134, 138 148" />
-                  <path d="M66 156 C80 144, 120 144, 134 156 C156 172, 144 192, 100 192 C56 192, 44 172, 66 156 Z" />
-                  <path d="M76 188 C82 198, 92 204, 100 204 C108 204, 118 198, 124 188" />
-                  <path d="M60 176 C48 180, 40 190, 42 200" />
-                  <path d="M140 176 C152 180, 160 190, 158 200" />
-                </motion.svg>
-              </div>
-
-              <span className="font-cond uppercase tracking-[0.4em] text-xs font-semibold text-neutral-400 mb-3">
+              <motion.span
+                initial={{ opacity: 0, letterSpacing: "0.15em" }}
+                animate={{ opacity: 1, letterSpacing: "0.4em" }}
+                transition={{ duration: 0.7, delay: 0.1 }}
+                className="font-cond uppercase text-xs font-semibold text-neutral-400 mb-3"
+              >
                 Welcome to
-              </span>
+              </motion.span>
 
-              <h1 className="font-display uppercase tracking-wider text-4xl sm:text-6xl md:text-7xl font-bold text-white mb-4">
-                {gymName}
-              </h1>
+              {/* Gym name — staggered word-by-word reveal with a soft blur-in */}
+              <motion.h1
+                variants={wordContainer}
+                initial="hidden"
+                animate="visible"
+                className="font-display uppercase tracking-wider text-4xl sm:text-6xl md:text-7xl font-bold text-white mb-4 flex flex-wrap items-center justify-center gap-x-4"
+              >
+                {nameWords.map((word, i) => (
+                  <motion.span key={`${word}-${i}`} variants={wordItem} className="inline-block">
+                    {word}
+                  </motion.span>
+                ))}
+              </motion.h1>
 
-              <div className="w-12 h-px bg-white/30 my-3" />
+              {/* Animated underline grows in after the name has revealed */}
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: "3rem" }}
+                transition={{ duration: 0.6, delay: 0.15 + nameWords.length * 0.12 + 0.2, ease: [0.19, 1, 0.22, 1] }}
+                className="h-px bg-white/30 my-3"
+              />
 
-              <p className="font-cond uppercase tracking-[0.3em] text-[11px] sm:text-xs text-neutral-400">
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.15 + nameWords.length * 0.12 + 0.35 }}
+                className="font-cond uppercase tracking-[0.3em] text-[11px] sm:text-xs text-neutral-400"
+              >
                 Let&apos;s Get to Work
-              </p>
+              </motion.p>
             </motion.div>
           </div>
         </motion.div>
